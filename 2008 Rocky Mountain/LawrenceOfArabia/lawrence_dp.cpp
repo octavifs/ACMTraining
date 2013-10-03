@@ -9,6 +9,8 @@ int lawrence(vector<vector<int> > &permutations, int pos, int cuts) {
     int min = 1000000000;
     for (int i = 0; i < (permutations[pos].size() - 1); ++i)
     {
+        if (permutations[pos][i] > min)
+            continue;
         int result = permutations[pos][i] + lawrence(permutations, pos + i +1, cuts -1);
         if (result < min)
             min = result;
