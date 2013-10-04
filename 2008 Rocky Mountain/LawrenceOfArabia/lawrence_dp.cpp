@@ -1,24 +1,37 @@
 #include <iostream>
 #include <vector>
+#include <limits>
 
 using namespace std;
+
+int store[1001][1001];
 
 int lawrence(vector<vector<int> > &permutations, int pos, int cuts) {
     if (!cuts)
         return permutations[pos].back();
-    int min = 1000000000;
-    for (int i = 0; i < (permutations[pos].size() - 1); ++i)
+    if (store[pos][cuts] != -1)
+        return store[pos][cuts];
+    int min = numeric_limits<int>::max();
+    for (int i = 0; i < (permutations[pos].size() - cuts); ++i)
     {
         if (permutations[pos][i] > min)
             continue;
-        int result = permutations[pos][i] + lawrence(permutations, pos + i +1, cuts -1);
+        int result = permutations[pos][i] + lawrence(permutations, pos + i + 1, cuts -1);
         if (result < min)
             min = result;
     }
+    store[pos][cuts] = min;
     return min;
 }
 
 int main() {
+    for (int i = 0; i < 1001; ++i)
+    {
+        for (int j = 0; j < 1001; ++j)
+        {
+            store[i][j] = -1;
+        }
+    }
     while(true) {
         int depots, attacks;
         cin >> depots >> attacks;
@@ -47,5 +60,12 @@ int main() {
             }
         }
         cout << lawrence(permutations, 0, attacks) << endl;
+        for (int i = 0; i < depots; ++i)
+        {
+            for (int j = 0; j <= attacks; ++j)
+            {
+                store[i][j] = -1;
+            }
+        }
     }
 }
